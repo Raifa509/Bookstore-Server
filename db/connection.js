@@ -10,6 +10,5 @@ mongoose.connect(connectionString).then(res=>{
 }).catch(err=>{
     console.log("Mongodb Atlas connection failed!!!");
     console.log(err);
-    
-    
+       
 })

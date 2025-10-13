@@ -12,7 +12,7 @@ const bookstoreServer=express()
 //enable cors protocol in server app
 bookstoreServer.use(cors())
 
-//parse json - only happens when json data comes before goes to rounting
+//parse json - only happens when json data comes before goes to routing
 //this express.json is a middleware
 bookstoreServer.use(express.json())
 
