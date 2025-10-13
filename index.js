@@ -4,6 +4,7 @@ require("dotenv").config()
 const express=require("express")
 const cors=require("cors")
 const router=require('./routing/router')
+require('./db/connection')
 
 //create server
 const bookstoreServer=express()
@@ -12,7 +13,10 @@ const bookstoreServer=express()
 bookstoreServer.use(cors())
 
 //parse json - only happens when json data comes before goes to rounting
+//this express.json is a middleware
 bookstoreServer.use(express.json())
+
+
 bookstoreServer.use(router)
 
 //create port for application
