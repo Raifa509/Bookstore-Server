@@ -7,7 +7,7 @@ const jwtMiddleware=(req,res,next)=>{
     try{
         const jwtResponse=jwt.verify(token,process.env.JWTSECRET)
         // console.log(jwtResponse);
-        req.response=jwtResponse.userMail
+        req.payload=jwtResponse.userMail
         next()
         
     }catch(err){
