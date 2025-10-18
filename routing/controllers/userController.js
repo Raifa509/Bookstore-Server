@@ -1,5 +1,6 @@
 const users = require('../../models/userModel')
 const jwt = require('jsonwebtoken')
+
 //register
 exports.registerController = async (req, res) => {
         console.log("inside Register API");
@@ -10,7 +11,6 @@ exports.registerController = async (req, res) => {
                 const existingUser = await users.findOne({ email })
                 if (existingUser) {
                         res.status(409).json("User Already exist!! Please Login")
-
                 } else {
                         const newUser = new users({
                                 username,
@@ -20,7 +20,6 @@ exports.registerController = async (req, res) => {
                         await newUser.save()
                         res.status(200).json(newUser)
                 }
-
         } catch (err) {
                 res.status(500).json(err)
         }

@@ -19,4 +19,7 @@ router.post('/google-login',userController.googleLoginController)
 //add book
 router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImges',3),bookController.addBookController)
 
+//home-book
+router.get('/home-books',bookController.getHomeBooks)
+
 module.exports=router

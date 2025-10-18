@@ -5,7 +5,7 @@ exports.addBookController= async (req,res)=>{
     console.log('Inside addBookController');
     // console.log(req.body);
     const {title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category}=req.body
-    // console.log(req.files);
+    console.log(req.files);
     const userMail=req.payload
     var uploadImg=[]
     req.files.map(item=>uploadImg.push(item.filename))
@@ -24,8 +24,21 @@ exports.addBookController= async (req,res)=>{
             res.status(200).json(newBook)
         }
     }catch(err){
-            res.status(500).json(err)
+            // res.status(500).json(err)
+        console.log(err);
+        
+    }
+    
+}
 
+//get home books
+exports.getHomeBooks=async(req,res)=>{
+    console.log('Inside getHomeBooks');
+    try{
+        const allHomeBooks=await books.find().sort({_id:-1}).limit(4)
+        res.status(200).json(allHomeBooks)
+    }catch(err){
+        res.status(500).json(err)
     }
     
 }
