@@ -26,7 +26,7 @@ router.get('/home-books',bookController.getHomeBooksController)
 router.get('/all-books',jwtMiddleware,bookController.getAllBooksController)
 
 //view-book
-router.get('/books/:id/view',jwtMiddleware,bookController.viewBookController)
+router.get('/book/:id/view',jwtMiddleware,bookController.viewBookController)
 
 
 module.exports=router

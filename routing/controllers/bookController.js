@@ -58,7 +58,12 @@ exports.getAllBooksController=async(req,res)=>{
 exports.viewBookController =async(req,res)=>{
     console.log("Inside viewBookController");
     const {id}=req.params
-    console.log(id);
-    
-    
+    // console.log(id);
+    try{
+        const viewBook=await books.findById({_id:id})
+        res.status(200).json(viewBook)
+    }catch(err){
+        res.status(500).json(err)
+        
+    } 
 }
