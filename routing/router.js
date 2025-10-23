@@ -28,5 +28,16 @@ router.get('/all-books',jwtMiddleware,bookController.getAllBooksController)
 //view-book
 router.get('/book/:id/view',jwtMiddleware,bookController.viewBookController)
 
+//view-book
+router.get('/book/:id/view',jwtMiddleware,bookController.viewBookController)
+
+//get useruploaded books
+router.get('/user-books',jwtMiddleware,bookController.getAllUserBooksController)
+
+//get userbought books
+router.get('/user-bought-books',jwtMiddleware,bookController.getAllUserBoughtBooksController)
+
+//delete useruploaded books
+router.get('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBookController)
 
 module.exports=router
