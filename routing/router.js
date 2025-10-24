@@ -38,6 +38,6 @@ router.get('/user-books',jwtMiddleware,bookController.getAllUserBooksController)
 router.get('/user-bought-books',jwtMiddleware,bookController.getAllUserBoughtBooksController)
 
 //delete useruploaded books
-router.get('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBookController)
+router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBookController)
 
 module.exports=router
