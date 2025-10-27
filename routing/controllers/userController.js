@@ -1,6 +1,9 @@
 const users = require('../../models/userModel')
 const jwt = require('jsonwebtoken')
 
+
+//--------------------------user-----------------------
+
 //register
 exports.registerController = async (req, res) => {
         console.log("inside Register API");
@@ -38,7 +41,7 @@ exports.loginController = async (req, res) => {
 
                         if (existingUser.password == password) {
                                 //token
-                                const token = jwt.sign({ userMail: existingUser.email }, process.env.JWTSECRET)
+                                const token = jwt.sign({ userMail: existingUser.email,role:existingUser.role }, process.env.JWTSECRET)
                                 res.status(200).json({ user: existingUser, token })
 
                         } else {
@@ -67,7 +70,7 @@ exports.googleLoginController = async (req, res) => {
                 if (existingUser) {
 
                         //token
-                        const token = jwt.sign({ userMail: existingUser.email }, process.env.JWTSECRET)
+                        const token = jwt.sign({ userMail: existingUser.email,role:existingUser.role }, process.env.JWTSECRET)
                         res.status(200).json({ user: existingUser, token })
 
                 } else {
@@ -88,4 +91,51 @@ exports.googleLoginController = async (req, res) => {
         }
 
 }
-//profile
+
+
+//profile-user
+exports.userProfileEditController=async(req,res)=>{
+        console.log("Inside userProfileEditController");
+        //get data to be updated from req,body(text content),payload(userMail),file(profile)
+        const {username,password,bio,role,profile}=req.body
+        const email=req.userMail
+        const uploadedprofile=req.file?req.file.filename:profile
+        try{
+        const updatedUser=await users.findOneAndUpdate({email},{username,email,password,profile:uploadedprofile,bio,role},{new:true})
+        await updatedUser.save()
+        res.status(200).json(updatedUser)
+        }catch(err)
+        {
+                res.status(500).json(err)
+        }
+
+}
+
+//---------------------admin---------------------
+
+//get all users
+exports.getAllUsersController=async(req,res)=>{
+        console.log("Inside getAllUsersController");
+        const email=req.payload
+        try{
+                const allUsers=await users.find({email:{$ne:email}})
+                res.status(200).json(allUsers)
+        }catch(err)
+        {
+                res.status(500).json(err)
+                
+        }
+        
+}
+
+//get all books
+exports.getAllBooksAdminController=async(req,res)=>{
+        console.log("Inside getAllBooksAdminController");
+        try{
+                const allAdminBooks=await books.find()
+                res.status(200).json(allAdminBooks)
+        }catch(err){
+                res.status(500).json(err)
+        }
+        
+}

@@ -4,8 +4,10 @@ const bookController=require('./controllers/bookController')
 const jwtMiddleware = require("../middlewares/jwtMiddlewares")
 const multer = require("multer")
 const multerConfig = require("../middlewares/imageMulterMiddleware")
-
 const router=express.Router()
+const adminJwtMiddleware=require("../middlewares/adminJwtMiddleware")
+
+//----------------------unauthorized user-----------------------
 
 //register 
 router.post('/register',userController.registerController)
@@ -15,6 +17,9 @@ router.post('/login',userController.loginController)
 
 //googlelogin
 router.post('/google-login',userController.googleLoginController)
+
+
+//--------------------------------Authorized user----------------------
 
 //add book
 router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImges',3),bookController.addBookController)
@@ -39,5 +44,18 @@ router.get('/user-bought-books',jwtMiddleware,bookController.getAllUserBoughtBoo
 
 //delete useruploaded books
 router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBookController)
+
+//user profile update
+router.put('/user-profile/edit',jwtMiddleware,multerConfig.single("profile"),userController.userProfileEditController)
+
+
+//------------------------------ADMIN---------------------------------
+
+//get user list
+router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
+
+//get all books list
+router.get('/admin-all-books',adminJwtMiddleware,userController.getAllBooksAdminController)
+
 
 module.exports=router
