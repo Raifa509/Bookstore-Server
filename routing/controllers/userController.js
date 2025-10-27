@@ -98,7 +98,7 @@ exports.userProfileEditController=async(req,res)=>{
         console.log("Inside userProfileEditController");
         //get data to be updated from req,body(text content),payload(userMail),file(profile)
         const {username,password,bio,role,profile}=req.body
-        const email=req.userMail
+        const email=req.payload
         const uploadedprofile=req.file?req.file.filename:profile
         try{
         const updatedUser=await users.findOneAndUpdate({email},{username,email,password,profile:uploadedprofile,bio,role},{new:true})
@@ -106,6 +106,8 @@ exports.userProfileEditController=async(req,res)=>{
         res.status(200).json(updatedUser)
         }catch(err)
         {
+                console.log("error is",err);
+                
                 res.status(500).json(err)
         }
 
