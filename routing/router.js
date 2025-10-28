@@ -55,7 +55,7 @@ router.put('/user-profile/edit',jwtMiddleware,multerConfig.single("profile"),use
 router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
 
 //get all books list
-router.get('/admin-all-books',adminJwtMiddleware,userController.getAllBooksAdminController)
+router.get('/admin-all-books',adminJwtMiddleware,bookController.getAllBooksAdminController)
 
 
 module.exports=router
