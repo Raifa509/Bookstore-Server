@@ -58,4 +58,7 @@ router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
 router.get('/admin-all-books',adminJwtMiddleware,bookController.getAllBooksAdminController)
 
 
+//approve-books
+router.put('/admin/book/approve',adminJwtMiddleware,bookController.updateBookStatusController)
+
 module.exports=router
