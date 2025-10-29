@@ -106,7 +106,7 @@ exports.userProfileEditController=async(req,res)=>{
         res.status(200).json(updatedUser)
         }catch(err)
         {
-                console.log("error is",err);
+               
                 
                 res.status(500).json(err)
         }
@@ -136,6 +136,22 @@ exports.getAllBooksAdminController=async(req,res)=>{
         try{
                 const allAdminBooks=await books.find()
                 res.status(200).json(allAdminBooks)
+        }catch(err){
+                res.status(500).json(err)
+        }
+        
+}
+
+//update admin profile
+exports.updateAdminProfileController=async(req,res)=>{
+        console.log("Inside updateAdminProfileController");
+        const {username,password,bio,role,profile}=req.body
+        const email=req.payload
+        const uploadedprofile=req.file?req.file.filename:profile
+        try{
+                const uploadedAdminProfile=await users.findOneAndUpdate({email},{username,email,password,profile:uploadedprofile,bio,role},{new:true})
+                await uploadedAdminProfile.save()
+                res.status(200).json(uploadedAdminProfile)
         }catch(err){
                 res.status(500).json(err)
         }
