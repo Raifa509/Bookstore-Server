@@ -2,11 +2,14 @@ const express=require("express")
 const userController=require('./controllers/userController')
 const bookController=require('./controllers/bookController')
 const jobController=require('./controllers/jobController')
+const applicationController=require('./controllers/applicationController')
 const jwtMiddleware = require("../middlewares/jwtMiddlewares")
 const multer = require("multer")
 const multerConfig = require("../middlewares/imageMulterMiddleware")
 const router=express.Router()
 const adminJwtMiddleware=require("../middlewares/adminJwtMiddleware")
+const pdfMulterConfig=require("../middlewares/pdfMulterMiddleware")
+
 
 //----------------------unauthorized user-----------------------
 
@@ -52,6 +55,8 @@ router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBo
 //user profile update
 router.put('/user-profile/edit',jwtMiddleware,multerConfig.single("profile"),userController.userProfileEditController)
 
+//apply job
+router.post('/apply-job',jwtMiddleware,pdfMulterConfig.single("resume"),applicationController.addApplicationController)
 
 //------------------------------ADMIN---------------------------------
 
@@ -72,6 +77,9 @@ router.post('/add-job',adminJwtMiddleware,jobController.addJobController)
 
 //delete job
 router.delete('/job/:id/remove',adminJwtMiddleware,jobController.removeJobController)
+
+//get-application
+router.get('/all-applications',adminJwtMiddleware,applicationController.getApplicationController)
 
 
 

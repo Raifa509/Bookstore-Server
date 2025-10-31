@@ -1,5 +1,5 @@
 const jobs=require('../../models/jobModel');
-const { all } = require('../router');
+
 
 //add job
 exports.addJobController=async(req,res)=>{
