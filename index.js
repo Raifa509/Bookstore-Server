@@ -21,6 +21,7 @@ bookstoreServer.use(router)
 
 //for static files
 bookstoreServer.use('/uploads',express.static('./uploads'))
+bookstoreServer.use('/pdf',express.static('./pdf'))
 
 //create port for application
 const PORT=3000
