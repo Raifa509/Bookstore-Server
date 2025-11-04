@@ -1,147 +1,190 @@
-const books=require('../../models/bookModel')
+const books = require('../../models/bookModel')
+const stripe = require('stripe')('sk_test_51SPbfPFZ4aeoDq4tKG3ynbJQh6Nq19kSzN0Br0pYb1RwlivN8xe7Tc3WZeMFAO8yrHYmfZa94s3Bw2yBRZGiTLNm00bf5yBDRG')//secret key
+
 
 //add book
-exports.addBookController= async (req,res)=>{
+exports.addBookController = async (req, res) => {
     console.log('Inside addBookController');
     // console.log(req.body);
-    const {title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category}=req.body
+    const { title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category } = req.body
     console.log(req.files);
-    const userMail=req.payload
-    var uploadImg=[]
-    req.files.map(item=>uploadImg.push(item.filename))
-    console.log(title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,userMail);
-     
-    try{
-        const existingBook=await books.findOne({title,userMail})
-        if(existingBook){
+    const userMail = req.payload
+    var uploadImg = []
+    req.files.map(item => uploadImg.push(item.filename))
+    console.log(title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category, uploadImg, userMail);
+
+    try {
+        const existingBook = await books.findOne({ title, userMail })
+        if (existingBook) {
             res.status(401).json("You have already added the book")
-        
-        }else{
-            const newBook=new books({
-                title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,userMail
+
+        } else {
+            const newBook = new books({
+                title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category, uploadImg, userMail
             })
             await newBook.save()
             res.status(200).json(newBook)
         }
-    }catch(err){
-            // res.status(500).json(err)
+    } catch (err) {
+        // res.status(500).json(err)
         console.log(err);
-        
+
     }
-    
+
 }
 
 //get home books
-exports.getHomeBooksController=async(req,res)=>{
+exports.getHomeBooksController = async (req, res) => {
     console.log('Inside getHomeBooks');
-    try{
-        const allHomeBooks=await books.find().sort({_id:-1}).limit(4)
+    try {
+        const allHomeBooks = await books.find().sort({ _id: -1 }).limit(4)
         res.status(200).json(allHomeBooks)
-    }catch(err){
+    } catch (err) {
         res.status(500).json(err)
-    }   
+    }
 }
 
 //get all books
-exports.getAllBooksController=async(req,res)=>{
+exports.getAllBooksController = async (req, res) => {
     console.log('Inside getAllBooks');
-    const searchKey=req.query.search
-    const email=req.payload
-    const query={
-        title:{$regex:searchKey,$options:'i'},
-        userMail:{$ne:email}
+    const searchKey = req.query.search
+    const email = req.payload
+    const query = {
+        title: { $regex: searchKey, $options: 'i' },
+        userMail: { $ne: email }
     }
-    try{
-        const allBooks=await books.find(query)
+    try {
+        const allBooks = await books.find(query)
         res.status(200).json(allBooks)
-    }catch(err){
+    } catch (err) {
         res.status(500).json(err)
-    }   
+    }
 }
 
 //view book
-exports.viewBookController =async(req,res)=>{
+exports.viewBookController = async (req, res) => {
     console.log("Inside viewBookController");
-    const {id}=req.params
+    const { id } = req.params
     // console.log(id);
-    try{
-        const viewBook=await books.findById({_id:id})
+    try {
+        const viewBook = await books.findById({ _id: id })
         res.status(200).json(viewBook)
-    }catch(err){
+    } catch (err) {
         res.status(500).json(err)
-        
-    } 
+
+    }
 }
 
 //get all user  book for book status
-exports.getAllUserBooksController=async(req,res)=>{
+exports.getAllUserBooksController = async (req, res) => {
     console.log("Inside getAllUserBooksController");
-    const email=req.payload
-    try{
-        const allUserBooks=await books.find({userMail:email})
+    const email = req.payload
+    try {
+        const allUserBooks = await books.find({ userMail: email })
         res.status(200).json(allUserBooks)
-    }catch(err)
-    {
+    } catch (err) {
         res.status(500).json(err)
     }
-    
+
 }
 
 //get all user bought book - for purchase history
-exports.getAllUserBoughtBooksController=async(req,res)=>{
+exports.getAllUserBoughtBooksController = async (req, res) => {
     console.log("Inside getAllUserBoughtBooksController");
-    const email=req.payload
-    try{
-        const allUserBoughtBooks=await books.find({bought:email})
+    const email = req.payload
+    try {
+        const allUserBoughtBooks = await books.find({ bought: email })
         res.status(200).json(allUserBoughtBooks)
-    }catch(err)
-    {
+    } catch (err) {
         res.status(500).json(err)
     }
-    
+
 }
 
 //removing user uploaded book
-exports.deleteUserBookController=async(req,res)=>{
+exports.deleteUserBookController = async (req, res) => {
     console.log("Inside deleteUserBookController");
     //get book id 
-    const {id}=req.params
+    const { id } = req.params
     console.log(id);
-    try{
-        await books.findByIdAndDelete({_id:id})
+    try {
+        await books.findByIdAndDelete({ _id: id })
         res.status(200).json("Deleted successfully!!!")
-    }catch(err)
-    {
+    } catch (err) {
         res.status(500).json(err)
-        
+
     }
-    
+
 }
 
 //get all books to admin
-exports.getAllBooksAdminController=async(req,res)=>{
+exports.getAllBooksAdminController = async (req, res) => {
     console.log("Inside getAllBooksAdminController");
-    try{
-        const allAdminBooks=await books.find()
+    try {
+        const allAdminBooks = await books.find()
         res.status(200).json(allAdminBooks)
-    }catch(err)
-    {
+    } catch (err) {
         res.status(500).json(err)
     }
-    
+
 }
 
-
 //update book status
-exports.updateBookStatusController=async(req,res)=>{
+exports.updateBookStatusController = async (req, res) => {
     console.log("Inside updateBookStatusController");
-    const {_id,title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status,userMail,bought}=req.body
-    try{
-        const updateBook=await books.findByIdAndUpdate({_id},{title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status:"approved",userMail,bought},{new:true})
+    const { _id, title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category, uploadImg, status, userMail, bought } = req.body
+    try {
+        const updateBook = await books.findByIdAndUpdate({ _id }, { title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category, uploadImg, status: "approved", userMail, bought }, { new: true })
         await updateBook.save()
         res.status(200).json(updateBook)
-    }catch(err){
+    } catch (err) {
         res.status(500).json(err)
     }
-    
+
+}
+
+//make payment
+exports.makeBookPaymentController = async (req, res) => {
+    console.log("Inside makeBookPaymentController");
+    const { _id, title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category } = req.body
+    const email = req.payload
+    try {
+        const updateBookDetails = await books.findByIdAndUpdate({ _id }, {
+            title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category, uploadImg, status: 'sold', userMail, bought: email
+        }, { new: true })
+        console.log(updateBookDetails);
+        //stripe checkout session
+
+        const line_items = [{
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: title,
+                    description: `${author} | ${publisher}`,
+                    images: uploadImg,
+                    metadata: {
+                        title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category,status: 'sold', userMail, bought: email
+                    },
+                },
+                unit_amount: Math.round(discountPrice * 100)
+            },
+            quantity: 1
+        }]
+
+//         const session = await stripe.checkout.sessions.create({
+//   success_url: 'https://example.com/success',
+//   line_items: [
+//     {
+//       price: 'price_1MotwRLkdIwHu7ixYcPLm5uZ',
+//       quantity: 2,
+//     },
+//   ],
+//   mode: 'payment',
+// });
+
+
+    } catch (err) {
+        res.status(500).json(err)
+    }
+
 }

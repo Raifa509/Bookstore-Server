@@ -12,7 +12,7 @@ const storage=multer.diskStorage({
 })
 
 const fileFilter = (req,file,cb)=>{
-    //image with png,jpg,jpeg
+   
     if(file.mimetype=='application/pdf')
     {
         cb(null,true)
