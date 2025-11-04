@@ -1,5 +1,5 @@
 const books = require('../../models/bookModel')
-const stripe = require('stripe')('sk_test_51SPbfPFZ4aeoDq4tKG3ynbJQh6Nq19kSzN0Br0pYb1RwlivN8xe7Tc3WZeMFAO8yrHYmfZa94s3Bw2yBRZGiTLNm00bf5yBDRG')//secret key
+const stripe = require('stripe')(process.env.STRIPESECRETKEY)//secret key
 
 
 //add book
