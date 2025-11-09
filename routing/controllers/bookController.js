@@ -146,7 +146,10 @@ exports.updateBookStatusController = async (req, res) => {
 //make payment
 exports.makeBookPaymentController = async (req, res) => {
     console.log("Inside makeBookPaymentController");
-    const { _id, title, author, noOfPages, imageUrl, price, discountPrice, abstract, publisher, language, isbn, category } = req.body
+    const {
+        _id, title, author, noOfPages, imageUrl, price, discountPrice, abstract,
+        publisher, language, isbn, category, uploadImg, userMail
+    } = req.body;
     const email = req.payload
     try {
         const updateBookDetails = await books.findByIdAndUpdate({ _id }, {
@@ -172,15 +175,15 @@ exports.makeBookPaymentController = async (req, res) => {
         }]
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types:["card"],
+            payment_method_types: ["card"],
             line_items,
             mode: 'payment',
-            success_url:'http://localhost:5173/payment-success',
-            cancel_url:'http://localhost:5173/payment-error'
+            success_url: 'http://localhost:5173/payment-success',
+            cancel_url: 'http://localhost:5173/payment-error'
         });
         console.log(session);
-        res.status(200).json({checkoutSessionURL:session.url})
-        
+        res.status(200).json({ checkoutSessionURL: session.url })
+
 
     } catch (err) {
         res.status(500).json(err)

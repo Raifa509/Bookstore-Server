@@ -58,6 +58,9 @@ router.put('/user-profile/edit',jwtMiddleware,multerConfig.single("profile"),use
 //apply job
 router.post('/apply-job',jwtMiddleware,pdfMulterConfig.single("resume"),applicationController.addApplicationController)
 
+//make payment
+router.post('/make-payment',jwtMiddleware,bookController.makeBookPaymentController)
+
 //------------------------------ADMIN---------------------------------
 
 //get user list
